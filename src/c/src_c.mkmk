@@ -1,0 +1,24 @@
+# Copyright 2015 the Neutrino authors (see AUTHORS).
+# Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+filenames = [
+  "context-skia.cc",
+]
+
+library = get_group("library")
+library.add_member(get_dep_external('tclib', 'src', 'c', 'io', 'library'), obj=True)
+library.add_member(get_dep_external('tclib', 'src', 'c', 'sync', 'library'), obj=True)
+library.add_member(get_external("third_party", "skia", "library"))
+
+for filename in filenames:
+  source = c.get_source_file(filename)
+  source.add_include(get_dep("tclib").get_child("src", "c"))
+  object = source.get_object()
+  object.add_library("skia")
+  # We need to have fetched the skia library to get the includes to use when
+  # compiling these source files.
+  object.add_dependency(get_external("third_party", "skia", "fetch"))
+  library.add_member(object, obj=True)
+
+all = get_group("all")
+all.add_member(library)

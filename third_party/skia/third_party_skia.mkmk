@@ -1,0 +1,73 @@
+# Copyright 2015 the Neutrino authors (see AUTHORS).
+# Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+import os.path
+
+BASE_URL = "https://tundrastorage.blob.core.windows.net/libskia"
+VERSION = "0_0_1"
+
+platform_info = get_platform_info()
+opsys = "win" if platform_info.is_windows() else "lnx"
+arch = "32" if platform_info.is_32_bit() else "64"
+
+archive_name = "libskia-%s-%s-rel-%s" % (opsys, arch, VERSION)
+
+container = os.environ.get("LIBRARY_CONTAINER", None)
+if container is None:
+  container = get_bindir().get_child("libs").get_path()
+
+# The command that fetches the archive over HTTP.
+fetch_archive = get_custom_exec_file("%s.fetched" % archive_name)
+fetch_archive.set_runner(py.get_source_file("../../tools/fetch-library.py"))
+fetch_archive.set_arguments(
+  "--base-url", BASE_URL,
+  "--container", container,
+  "--library", archive_name,
+  "--marker", fetch_archive.get_output_path())
+fetch_archive.set_title("Ensuring %s is available" % archive_name)
+
+# The paths within the library to use when building.
+lib_basename = "skia.lib" if platform_info.is_windows() else "libskia.a"
+lib = os.path.join(container, archive_name, "lib", lib_basename)
+include = os.path.join(container, archive_name, "include")
+
+# Alias for fetching the archive. You typically only need to use this explicitly
+# to get the includes, if you use the library it should be fetched
+# automatically.
+fetch = get_group("fetch")
+fetch.add_member(fetch_archive)
+
+# Alias for the object to include to link with the library.
+object = get_group("library")
+object.add_file(get_system_file(lib), obj=True)
+
+# This is totally cheating. It ensures that if anyone uses the library there's
+# a target with that name that results in fetching it.
+lib_alias = add_alias(lib)
+lib_alias.add_member(fetch)
+lib_alias.set_phony(False) # Make it non-phony so it doesn't force rebuilds.
+
+subincludes = [[], ["config"], ["core"], ["xml"]]
+all_includes = [os.path.join(include, *sub) for sub in subincludes]
+
+# In addition to the library object you also need to use this library to get the
+# right includes and link against the right platform libraries.
+(get_library_info("skia")
+  .add_platform("posix",
+    includes=all_includes,
+    libs=[
+      "fontconfig",
+      "freetype",
+      "GL",
+      "m",
+      "X11",
+    ])
+  .add_platform("windows",
+    includes=all_includes,
+    libs=[
+      "Gdi32.lib",
+      "Ole32.lib",
+      "OleAut32.lib",
+      "Opengl32.lib",
+      "User32.lib",
+    ]))

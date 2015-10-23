@@ -1,0 +1,18 @@
+# Copyright 2015 the Neutrino authors (see AUTHORS).
+# Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+settings = c.get_settings()
+settings.add_pervasive("cflags", "-fno-rtti", language="c++", toolchain="gcc")
+settings.add_pervasive("cflags", "/MD", toolchain="msvc")
+settings.add_sticky("cflags", "-std=c++11", language="c++", toolchain="gcc")
+settings.add_sticky("warnings", "no-invalid-offsetof", language="c++", toolchain="gcc")
+
+include_dep('tclib', 'tclib.mkmk')
+
+include('third_party', 'third_party.mkmk')
+include('src', 'c', 'src_c.mkmk')
+include('tests', 'c', 'tests_c.mkmk')
+
+all = add_alias("all")
+all.add_member(get_external("src", "c", "all"))
+all.add_member(get_external("tests", "c", "all"))
