@@ -3,11 +3,9 @@
 
 settings = c.get_settings()
 settings.add_pervasive("cflags", "-fno-rtti", language="c++", toolchain="gcc")
+settings.add_pervasive("cflags", "/MD", toolchain="msvc")
 settings.add_sticky("cflags", "-std=c++11", language="c++", toolchain="gcc")
 settings.add_sticky("warnings", "no-invalid-offsetof", language="c++", toolchain="gcc")
-
-settings.add_pervasive("cflags", "/MD", toolchain="msvc")
-settings.add_sticky("warnings", "d4275", toolchain="msvc")
 
 include_dep('plankton', 'plankton.mkmk')
 
