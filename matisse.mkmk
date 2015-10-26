@@ -7,7 +7,7 @@ settings.add_pervasive("cflags", "/MD", toolchain="msvc")
 settings.add_sticky("cflags", "-std=c++11", language="c++", toolchain="gcc")
 settings.add_sticky("warnings", "no-invalid-offsetof", language="c++", toolchain="gcc")
 
-include_dep('tclib', 'tclib.mkmk')
+include_dep('plankton', 'plankton.mkmk')
 
 include('third_party', 'third_party.mkmk')
 include('src', 'c', 'src_c.mkmk')
