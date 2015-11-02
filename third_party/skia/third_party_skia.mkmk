@@ -43,7 +43,7 @@ object.add_file(get_system_file(lib), obj=True)
 
 # This is totally cheating. It ensures that if anyone uses the library there's
 # a target with that name that results in fetching it.
-lib_alias = add_alias(lib)
+lib_alias = add_alias(lib, force_global=True)
 lib_alias.add_member(fetch)
 lib_alias.set_phony(False) # Make it non-phony so it doesn't force rebuilds.
 
