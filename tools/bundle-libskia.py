@@ -27,22 +27,7 @@ WINDOWS_ONLY = {"system": "windows"}
 
 # Names of libraries
 LIBNAMES = [
-  ("skia_core", ALWAYS),
-  ("skia_effects", ALWAYS),
-  ("skia_images", ALWAYS),
-  ("skia_opts", ALWAYS),
-  ("skia_opts_sse41", ALWAYS),
-  ("skia_opts_ssse3", ALWAYS),
-  ("skia_ports", ALWAYS),
-  ("skia_sfnt", ALWAYS),
-  ("skia_skgpu", ALWAYS),
-  ("skia_utils", ALWAYS),
-  ("skia_views", ALWAYS),
-  ("skia_xml", ALWAYS),
-  (os.path.join("obj", "gyp", "etc1"), LINUX_ONLY),
-  (os.path.join("obj", "gyp", "SkKTX"), LINUX_ONLY),
-  (os.path.join("obj", "gyp", "libetc1"), WINDOWS_ONLY),
-  (os.path.join("obj", "gyp", "libSkKTX"), WINDOWS_ONLY),
+  ("skia_matisse", ALWAYS),
 ]
 
 def get_libfile(name):

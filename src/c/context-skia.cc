@@ -83,3 +83,11 @@ extern SkOSWindow* create_sk_window(void* hwnd, int argc, char** argv) {
 extern void application_init() { }
 
 extern void application_term() { }
+
+void SkFlattenable::InitializeFlattenablesIfNeeded() {
+  // nothing to do
+}
+
+SkColorFilter* SkColorFilter::CreateModeFilter(SkColor color, SkXfermode::Mode mode) {
+  return NULL;
+}
