@@ -141,7 +141,6 @@
             "<(skia_src_path)/ports/SkOSFile_posix.cpp",
             "<(skia_src_path)/ports/SkTLS_pthread.cpp",
             "<(skia_src_path)/views/unix/keysym2ucs.c",
-            "<(skia_src_path)/views/unix/skia_unix.cpp",
             "<(skia_src_path)/views/unix/SkOSWindow_Unix.cpp",
           ],
         }],
@@ -160,7 +159,6 @@
             "<(skia_src_path)/ports/SkTime_win.cpp",
             "<(skia_src_path)/ports/SkTLS_win.cpp",
             "<(skia_src_path)/ports/SkTypeface_win_dw.cpp",
-            "<(skia_src_path)/views/win/skia_win.cpp",
             "<(skia_src_path)/views/win/SkOSWindow_Win.cpp",
           ],
           "sources!": [
