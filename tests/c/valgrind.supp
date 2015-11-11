@@ -5,7 +5,6 @@
 {
    <fontconfig_init>
    Memcheck:Leak
-   match-leak-kinds: definite
    ...
    fun:XML_ParseBuffer
    fun:FcConfigParseAndLoad
