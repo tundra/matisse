@@ -23,7 +23,9 @@ matrix:
       compiler: clang
       script: mkmk init --config matisse.mkmk --debug --valgrind --valgrind-flag "suppressions=./tests/c/valgrind.supp" --noisy && ./build.sh all run-tests
       before_install: git submodule update --init --recursive
-      install: source ./tools/enter-devenv.sh
+      install:
+      - source ./tools/enter-devenv.sh
+      - export CXX="g++-4.8" CC="gcc-4.8";
       addons:
         apt:
           sources:
@@ -39,16 +41,22 @@ matrix:
       compiler: clang
       script: mkmk init --config matisse.mkmk --noisy && ./build.sh all run-tests
       before_install: git submodule update --init --recursive
-      install: source ./tools/enter-devenv.sh
+      install:
+      - source ./tools/enter-devenv.sh
+      - export CXX="g++-4.8" CC="gcc-4.8";
     # Test with checks disabled.
     - languate: c
       compiler: clang
       script: mkmk init --config matisse.mkmk --nochecks --noisy && ./build.sh all run-tests
       before_install: git submodule update --init --recursive
-      install: source ./tools/enter-devenv.sh
+      install:
+      - source ./tools/enter-devenv.sh
+      - export CXX="g++-4.8" CC="gcc-4.8";
     # Check that the C code compiles using gcc.
     - language: c
       compiler: gcc
       script: mkmk init --config matisse.mkmk --debug --noisy && ./build.sh all run-tests
       before_install: git submodule update --init --recursive
-      install: source ./tools/enter-devenv.sh
+      install:
+      - source ./tools/enter-devenv.sh
+      - export CXX="g++-4.8" CC="gcc-4.8";
