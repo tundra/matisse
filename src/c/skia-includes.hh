@@ -18,6 +18,9 @@
 #  pragma GCC diagnostic ignored "-Wconversion"
 #endif
 
+// If skia gets to define this itself stuff goes wrong because of the way tclib
+// defines always_inline. In fairness it's probably a bad idea for tclib to do
+// that but it's just so much easier to work around it like this.
 #define SK_ALWAYS_INLINE always_inline
 
 #include "core/SkCanvas.h"

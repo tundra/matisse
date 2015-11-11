@@ -20,10 +20,6 @@ SkiaGraphicsContext::SkiaGraphicsContext(SkCanvas *canvas)
   canvas->ref();
 }
 
-SkiaGraphicsContext::~SkiaGraphicsContext() {
-  canvas_->unref();
-}
-
 void SkiaGraphicsContext::clear() {
   canvas_->clear(SK_ColorWHITE);
 }

@@ -1,9 +1,6 @@
 //- Copyright 2015 the Neutrino authors (see AUTHORS).
 //- Licensed under the Apache License, Version 2.0 (see LICENSE).
 
-/// Basic C assertions for testing. These should not be used in program code,
-/// only tests.
-
 #ifndef _HELPERS
 #define _HELPERS
 
@@ -12,9 +9,11 @@
 
 namespace matisse {
 
+// Various helper functions for working with skia.
 class TestHelpers {
 public:
-  // Reads a test image under images/ into the given bitmap.
+  // Reads a test image under images/ into the given bitmap. Returns true iff
+  // successful.
   static bool read_test_image(const char *filename, Bitmap *out);
 };
 
