@@ -1,7 +1,10 @@
 language: c
 compiler: gcc
 script: mkmk init --config matisse.mkmk --debug --noisy && ./build.sh all run-tests
-install: source ./tools/enter-devenv.sh
+before_install: git submodule update --init --recursive
+install:
+- source ./tools/enter-devenv.sh
+- export CXX="g++-4.8" CC="gcc-4.8";
 sudo: false
 addons:
   apt:
