@@ -22,7 +22,7 @@ matrix:
     - language: c
       compiler: clang
 #      script: mkmk init --config matisse.mkmk --debug --valgrind --valgrind-flag "suppressions=./tests/c/valgrind.supp" --noisy && ./build.sh all run-tests
-      script: mkmk init --config matisse.mkmk --debug --valgrind --valgrind-flag "gen-suppressions=yes" --noisy && ./build.sh all run-tests
+      script: mkmk init --config matisse.mkmk --debug --valgrind --valgrind-flag "gen-suppressions=all" --noisy && ./build.sh all run-tests
       before_install: git submodule update --init --recursive
       install:
       - source ./tools/enter-devenv.sh
