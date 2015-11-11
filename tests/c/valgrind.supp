@@ -1,0 +1,12 @@
+# Valgrind suppressions. See
+# http://valgrind.org/docs/manual/manual-core.html#manual-core.suppress
+
+# False positive caused by fontconfig.
+{
+   <fontconfig_init>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   ...
+   fun:XML_ParseBuffer
+   fun:FcConfigParseAndLoad
+}

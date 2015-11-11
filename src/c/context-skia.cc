@@ -4,6 +4,7 @@
 #include "c/stdc.h"
 
 #include "context.hh"
+#include "impl-common.hh"
 
 BEGIN_C_INCLUDES
 #include "utils/check.h"
@@ -12,17 +13,16 @@ END_C_INCLUDES
 
 #include "skia-includes.hh"
 
-using namespace renderer;
+using namespace matisse;
 
-class SkiaGraphicsContext : public GraphicsContext {
-public:
-  SkiaGraphicsContext(SkCanvas *canvas) : canvas_(canvas) { }
-  virtual int32_size_t size();
-  virtual void draw_text(const char *message, int32_t x, int32_t y);
-  virtual void clear();
-private:
-  SkCanvas *canvas_;
-};
+SkiaGraphicsContext::SkiaGraphicsContext(SkCanvas *canvas)
+  : canvas_(canvas) {
+  canvas->ref();
+}
+
+SkiaGraphicsContext::~SkiaGraphicsContext() {
+  canvas_->unref();
+}
 
 void SkiaGraphicsContext::clear() {
   canvas_->clear(SK_ColorWHITE);

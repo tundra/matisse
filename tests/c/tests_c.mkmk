@@ -10,6 +10,7 @@ import re
 
 test_file_names = [
   "test_image.cc",
+  "helpers.cc",
 ]
 
 # Compile a single test file, ensuring that the include paths are hooked up
@@ -39,6 +40,8 @@ for test_file_name in test_file_names:
   source = c.get_source_file(test_file_name)
   source.add_include(get_dep("tclib").get_child("src", "c"))
   test_library.add_member(compile_test_file(source))
+  if not test_file_name.startswith("test_"):
+    continue
   test_case = test.get_exec_test_case(test_file_name)
   test_case.set_runner(test_main)
   test_case.add_env("TEST_IMAGES", IMAGES_PATH)

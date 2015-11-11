@@ -8,7 +8,9 @@
 
 #include "io/stream.hh"
 
-namespace renderer {
+namespace matisse {
+
+class GraphicsContext;
 
 class int32_size_t {
 public:
@@ -31,6 +33,11 @@ public:
 
   // Reads the contents of a png image from the given stream.
   bool read_from_png(tclib::InStream *in);
+
+  bool compare(Bitmap *that);
+
+  // Returns a new context for drawing on this bitmap.
+  GraphicsContext *new_context();
 
   // Returns the size of this image.
   int32_size_t size();

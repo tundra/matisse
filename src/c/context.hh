@@ -8,7 +8,7 @@
 
 #include "image.hh"
 
-namespace renderer {
+namespace matisse {
 
 class GraphicsContext {
 public:

@@ -4,6 +4,7 @@
 #include "c/stdc.h"
 
 #include "context.hh"
+#include "impl-common.hh"
 
 BEGIN_C_INCLUDES
 #include "utils/check.h"
@@ -12,12 +13,12 @@ END_C_INCLUDES
 
 #include "skia-includes.hh"
 
-using namespace renderer;
+using namespace matisse;
 using namespace tclib;
 
 class Bitmap::Data {
 private:
-  friend class renderer::Bitmap;
+  friend class Bitmap;
   SkBitmap sk_bitmap_;
 };
 
@@ -62,6 +63,29 @@ int32_size_t Bitmap::size() {
   int width = data_->sk_bitmap_.width();
   int height = data_->sk_bitmap_.height();
   return int32_size_t(width, height);
+}
+
+GraphicsContext *Bitmap::new_context() {
+  SkCanvas *canvas = new SkCanvas(data_->sk_bitmap_);
+  GraphicsContext *result = new SkiaGraphicsContext(canvas);
+  canvas->unref();
+  return result;
+}
+
+bool Bitmap::compare(Bitmap *that) {
+  int32_size_t this_size = this->size();
+  int32_size_t that_size = that->size();
+  if (this_size.width() != that_size.width() || this_size.height() != that_size.height())
+    return false;
+  for (int x = 0; x < this_size.width(); x++) {
+    for (int y = 0; y < this_size.height(); y++) {
+      SkColor this_pixel = data_->sk_bitmap_.getColor(x, y);
+      SkColor that_pixel = that->data_->sk_bitmap_.getColor(x, y);
+      if (this_pixel != that_pixel)
+        return false;
+    }
+  }
+  return true;
 }
 
 void matisse_force_decoder_linking(bool not_true) {
