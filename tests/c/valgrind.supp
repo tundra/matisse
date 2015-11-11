@@ -6,14 +6,12 @@
    <fontconfig_init>
    Memcheck:Leak
    ...
-   fun:XML_ParseBuffer
    fun:FcConfigParseAndLoad
 }
 {
    <fontconfig_reads>
    Memcheck:Addr4
    ...
-   fun:XML_ParseBuffer
    fun:FcConfigParseAndLoad
 }
 {
