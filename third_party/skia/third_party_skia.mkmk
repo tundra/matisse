@@ -4,13 +4,15 @@
 import os.path
 
 BASE_URL = "https://tundrastorage.blob.core.windows.net/libskia"
-VERSION = "0_0_3"
+VERSION = "0_0_5"
+IS_DEBUG = False
 
 platform_info = get_platform_info()
 opsys = "win" if platform_info.is_windows() else "lnx"
 arch = "32" if platform_info.is_32_bit() else "64"
+mode = "dbg" if IS_DEBUG else "rel"
 
-archive_name = "libskia-%s-%s-rel-%s" % (opsys, arch, VERSION)
+archive_name = "libskia-%s-%s-%s-%s" % (opsys, arch, mode, VERSION)
 
 container = os.environ.get("LIBRARY_CONTAINER", None)
 if container is None:
@@ -61,6 +63,7 @@ all_includes = [os.path.join(include, *sub) for sub in subincludes]
       "GL",
       "m",
       "X11",
+      "png",
     ])
   .add_platform("windows",
     includes=all_includes,
@@ -70,4 +73,5 @@ all_includes = [os.path.join(include, *sub) for sub in subincludes]
       "OleAut32.lib",
       "Opengl32.lib",
       "User32.lib",
+      "WindowsCodecs.lib",
     ]))

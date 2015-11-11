@@ -18,11 +18,16 @@
 #  pragma GCC diagnostic ignored "-Wconversion"
 #endif
 
+#define SK_ALWAYS_INLINE always_inline
+
 #include "core/SkCanvas.h"
 #include "core/SkColorFilter.h"
 #include "core/SkDevice.h"
 #include "core/SkDrawLooper.h"
 #include "core/SkFlattenable.h"
+#include "core/SkGraphics.h"
+#include "core/SkImageDecoder.h"
+#include "core/SkImageEncoder.h"
 #include "core/SkPaint.h"
 #include "core/SkPath.h"
 #include "core/SkRRect.h"

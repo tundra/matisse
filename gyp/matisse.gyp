@@ -2,8 +2,9 @@
 # Licensed under the Apache License, Version 2.0 (see LICENSE).
 #
 # Main gyp to use when building skia for matisse. You can't just build this
-# directly, you have to symlink the directory into the skia checkout and then
-# build it from there.
+# directly, you have to symlink the file into the root of the skia checkout and
+# then build it from there. Gyp is very particular about the paths of the files
+# involved.
 {
   "variables": {
     "skia_gyp_path": "gyp",
@@ -68,7 +69,6 @@
 
         # Cross-platform stuff from ports.
         "<(skia_src_path)/ports/SkDiscardableMemory_none.cpp",
-        "<(skia_src_path)/ports/SkImageDecoder_empty.cpp",
         "<(skia_src_path)/ports/SkImageGenerator_none.cpp",
         "<(skia_src_path)/ports/SkMemory_malloc.cpp",
         "<(skia_src_path)/ports/SkOSFile_stdio.cpp",
@@ -76,6 +76,13 @@
         # Cross-platform fonts stuff.
         "<(skia_src_path)/sfnt/SkOTTable_name.cpp",
         "<(skia_src_path)/sfnt/SkOTUtils.cpp",
+
+        # Working with images.
+        "<(skia_src_path)/images/SkImageDecoder.cpp",
+        "<(skia_src_path)/images/SkImageDecoder_FactoryRegistrar.cpp",
+        "<(skia_src_path)/images/SkImageEncoder.cpp",
+        "<(skia_src_path)/images/SkImageEncoder_Factory.cpp",
+        "<(skia_src_path)/images/SkScaledBitmapSampler.cpp",
 
         # Inline most of the views.
         "<(skia_include_path)/views/SkApplication.h",
@@ -133,6 +140,8 @@
         ["OS == 'linux'", {
           "sources": [
             "<(skia_src_path)/fonts/SkFontMgr_fontconfig.cpp",
+            "<(skia_src_path)/images/SkImageDecoder_FactoryDefault.cpp",
+            "<(skia_src_path)/images/SkImageDecoder_libpng.cpp",
             "<(skia_src_path)/ports/SkDebug_stdio.cpp",
             "<(skia_src_path)/ports/SkFontConfigInterface_direct.cpp",
             "<(skia_src_path)/ports/SkFontHost_fontconfig.cpp",
@@ -154,6 +163,7 @@
             "<(skia_src_path)/ports/SkDebug_win.cpp",
             "<(skia_src_path)/ports/SkFontMgr_win_dw.cpp",
             "<(skia_src_path)/ports/SkFontMgr_win_dw_factory.cpp",
+            "<(skia_src_path)/ports/SkImageDecoder_WIC.cpp",
             "<(skia_src_path)/ports/SkOSFile_win.cpp",
             "<(skia_src_path)/ports/SkScalerContext_win_dw.cpp",
             "<(skia_src_path)/ports/SkTime_win.cpp",

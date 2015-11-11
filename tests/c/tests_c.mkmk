@@ -3,24 +3,46 @@
 
 all = get_group('all')
 
-helloworld_filenames = [
-  "helloworld.cc"
+# Copyright 2014 the Neutrino authors (see AUTHORS).
+# Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+import re
+
+test_file_names = [
+  "test_image.cc",
 ]
 
-helloworld = c.get_executable("helloworld")
-helloworld.add_dependency(get_external("src", "c", "library"))
-helloworld.get_settings().add_local("linkflags",
-  "/subsystem:console",
-  "/entry:mainCRTStartup",
-  toolchain="msvc")
+# Compile a single test file, ensuring that the include paths are hooked up
+# right.
+def compile_test_file(source):
+  # Include the C sources.
+  source.add_include(get_root().get_child('src', 'c'))
+  return source.get_object()
 
-for filename in helloworld_filenames:
-  source = c.get_source_file(filename)
-  source.add_include(get_dep("tclib").get_child("src", "c"))
-  source.add_include(get_root().get_child("src", "c"))
-  object = source.get_object()
-  helloworld.add_object(object)
+test_library = get_group("library")
+test_library.add_member(get_dep_external("tclib", "src", "c", "test", "library"))
+test_library.add_member(get_dep_external("tclib", "src", "c", "test", "log-fail"))
+test_library.add_member(get_dep_external("tclib", "src", "c", "io", "library"))
+test_library.add_member(get_dep_external("tclib", "src", "c", "sync", "library"))
+test_library.add_dependency(get_external("src", "c", "library"))
 
-all.add_member(helloworld)
+# Compile the test main executable.
+test_main = c.get_executable("main")
+test_main.get_settings().set_local("subsystem", "CONSOLE", toolchain="msvc")
+test_main.add_object(test_library)
 
 run_tests = add_alias("run-tests")
+
+# Add targets to run the test cases.
+for test_file_name in test_file_names:
+  source = c.get_source_file(test_file_name)
+  source.add_include(get_dep("tclib").get_child("src", "c"))
+  test_library.add_member(compile_test_file(source))
+  test_case = test.get_exec_test_case(test_file_name)
+  test_case.set_runner(test_main)
+  stripped_test_case_name = re.match(r"test_(\w+).c", test_file_name).group(1)
+  test_case.set_arguments(stripped_test_case_name)
+  run_tests.add_member(test_case)
+  add_alias("run-test-%s" % stripped_test_case_name, test_case)
+
+all.add_member(test_main)

@@ -6,19 +6,9 @@
 
 #include "c/stdc.h"
 
-namespace renderer {
+#include "image.hh"
 
-class int32_size_t {
-public:
-  int32_size_t(int32_t width, int32_t height)
-    : width_(width)
-    , height_(height) { }
-  int32_t width() { return width_; }
-  int32_t height() { return height_; }
-private:
-  int32_t width_;
-  int32_t height_;
-};
+namespace renderer {
 
 class GraphicsContext {
 public:

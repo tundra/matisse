@@ -3,6 +3,7 @@
 
 filenames = [
   "context-skia.cc",
+  "image.cc",
 ]
 
 library = get_group("library")

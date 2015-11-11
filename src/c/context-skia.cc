@@ -72,18 +72,6 @@ void SkiaMainWindow::set_title(const char *title) {
   setTitle(title);
 }
 
-extern SkOSWindow* create_sk_window(void* hwnd, int argc, char** argv) {
-  Renderer *renderer = EntryPoint::create_renderer();
-  SkiaMainWindow *main_window = new SkiaMainWindow(renderer, hwnd);
-  renderer->configure(main_window);
-  main_window->setVisibleP(true);
-  return main_window;
-}
-
-extern void application_init() { }
-
-extern void application_term() { }
-
 void SkFlattenable::InitializeFlattenablesIfNeeded() {
   // nothing to do
 }
