@@ -59,6 +59,18 @@ bool Bitmap::read_from_png(InStream *in) {
       &data_->sk_bitmap_);
 }
 
+bool Bitmap::write_to_png(tclib::OutStream *out) {
+  SkData *data = SkImageEncoder::EncodeData(data_->sk_bitmap_,
+      SkImageEncoder::kPNG_Type, 100);
+  if (data == NULL)
+    return false;
+  WriteIop iop(out, data->data(), data->size());
+  if (!iop.execute())
+    return false;
+  data->unref();
+  return true;
+}
+
 int32_size_t Bitmap::size() {
   int width = data_->sk_bitmap_.width();
   int height = data_->sk_bitmap_.height();

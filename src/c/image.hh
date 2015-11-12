@@ -34,6 +34,9 @@ public:
   // Reads the contents of a png image from the given stream.
   bool read_from_png(tclib::InStream *in);
 
+  // Writes the contents of this bitmap as a png to the given stream.
+  bool write_to_png(tclib::OutStream *out);
+
   bool compare(Bitmap *that);
 
   // Returns a new context for drawing on this bitmap.

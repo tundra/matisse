@@ -25,6 +25,7 @@
 
 #include "core/SkCanvas.h"
 #include "core/SkColorFilter.h"
+#include "core/SkData.h"
 #include "core/SkDevice.h"
 #include "core/SkDrawLooper.h"
 #include "core/SkFlattenable.h"
