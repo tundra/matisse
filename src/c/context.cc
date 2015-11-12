@@ -20,6 +20,10 @@ SkiaGraphicsContext::SkiaGraphicsContext(SkCanvas *canvas)
   canvas->ref();
 }
 
+SkiaGraphicsContext::~SkiaGraphicsContext() {
+  canvas_->flush();
+}
+
 void SkiaGraphicsContext::clear() {
   canvas_->clear(SK_ColorWHITE);
 }
@@ -27,10 +31,17 @@ void SkiaGraphicsContext::clear() {
 void SkiaGraphicsContext::draw_text(const char *message, int32_t x, int32_t y) {
   SkPaint paint;
   paint.setColor(SK_ColorDKGRAY);
-  paint.setTextSize(32);
+  paint.setTextSize(16);
   paint.setTextAlign(SkPaint::kCenter_Align);
-  paint.setAntiAlias(true);
+  paint.setAntiAlias(false);
   canvas_->drawText(message, strlen(message), SkScalar(x), SkScalar(y), paint);
+}
+
+void SkiaGraphicsContext::draw_line(int32_t x0, int32_t y0, int32_t x1, int32_t y1) {
+  SkPaint paint;
+  paint.setColor(SK_ColorRED);
+  paint.setAntiAlias(false);
+  canvas_->drawLine(SkScalar(x0), SkScalar(y0), SkScalar(x1), SkScalar(y1), paint);
 }
 
 int32_size_t SkiaGraphicsContext::size() {

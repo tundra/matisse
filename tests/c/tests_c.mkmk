@@ -9,6 +9,7 @@ all = get_group('all')
 import re
 
 test_file_names = [
+  "test_context.cc",
   "test_image.cc",
   "helpers.cc",
 ]

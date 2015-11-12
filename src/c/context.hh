@@ -15,6 +15,7 @@ public:
   virtual ~GraphicsContext() { }
   virtual int32_size_t size() = 0;
   virtual void draw_text(const char *message, int32_t x, int32_t y) = 0;
+  virtual void draw_line(int32_t x0, int32_t y0, int32_t x1, int32_t y1) = 0;
   virtual void clear() = 0;
 };
 

@@ -24,7 +24,7 @@ static utf8_t get_full_test_path(char *scratch, const char *filename) {
 
 bool TestHelpers::read_test_image(const char *filename, Bitmap *out) {
   char scratch[256];
-  utf8_t full_path = get_full_test_path(scratch, "test_image_hello_chorus.png");
+  utf8_t full_path = get_full_test_path(scratch, filename);
   FileStreams streams = FileSystem::native()->open(full_path, OPEN_FILE_MODE_READ);
   if (!out->read_from_png(streams.in()))
     return false;
@@ -34,21 +34,21 @@ bool TestHelpers::read_test_image(const char *filename, Bitmap *out) {
 
 // Gets the full path to use for a failure image for an assertion that appeared
 // at the given source location.
-static utf8_t get_failure_image_path(const char *file, int line, char *scratch) {
+static utf8_t get_failure_image_path(const char *file, int tag, char *scratch) {
   const char *test_name = strstr(file, "test_");
   ASSERT_TRUE(test_name != NULL);
-  sprintf(scratch, "%s-%i.png", test_name, line);
+  sprintf(scratch, "%s-%i.png", test_name, tag);
   return new_c_string(scratch);
 }
 
-void TestHelpers::assert_imgeq(const char *file, int line, Bitmap *bitmap,
-    const char *filename, const char *fail_fmt) {
+void TestHelpers::assert_imgeq(const char *file, int line, int tag, Bitmap *bitmap,
+    const char *imgfile, const char *fail_fmt) {
   Bitmap expected;
-  ASSERT_TRUE(read_test_image(filename, &expected));
-  if (expected.compare(bitmap))
+  ASSERT_TRUE(read_test_image(imgfile, &expected));
+  if (expected.equals(bitmap))
     return;
   char scratch[256];
-  utf8_t image_path = get_failure_image_path(file, line, scratch);
+  utf8_t image_path = get_failure_image_path(file, tag, scratch);
   FileStreams streams = FileSystem::native()->open(image_path,
       OPEN_FILE_MODE_WRITE | OPEN_FILE_FLAG_BINARY);
   ASSERT_TRUE(bitmap->write_to_png(streams.out()));

@@ -34,10 +34,15 @@ public:
   // Reads the contents of a png image from the given stream.
   bool read_from_png(tclib::InStream *in);
 
+  // Initialize this bitmap to make it empty and have the given dimensions.
+  // The actual contents of the bitmap will be undefined.
+  bool init_empty(int width, int height);
+
   // Writes the contents of this bitmap as a png to the given stream.
   bool write_to_png(tclib::OutStream *out);
 
-  bool compare(Bitmap *that);
+  // Returns true iff this bitmap is pixel-by-pixel equal to the given one.
+  bool equals(Bitmap *that);
 
   // Returns a new context for drawing on this bitmap.
   GraphicsContext *new_context();

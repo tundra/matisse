@@ -59,6 +59,15 @@ bool Bitmap::read_from_png(InStream *in) {
       &data_->sk_bitmap_);
 }
 
+bool Bitmap::init_empty(int width, int height) {
+  SkImageInfo info = SkImageInfo::Make(width, height, kRGB_565_SkColorType,
+      kPremul_SkAlphaType);
+  if (!data_->sk_bitmap_.setInfo(info))
+    return false;
+  data_->sk_bitmap_.allocPixels();
+  return true;
+}
+
 bool Bitmap::write_to_png(tclib::OutStream *out) {
   SkData *data = SkImageEncoder::EncodeData(data_->sk_bitmap_,
       SkImageEncoder::kPNG_Type, 100);
@@ -84,7 +93,7 @@ GraphicsContext *Bitmap::new_context() {
   return result;
 }
 
-bool Bitmap::compare(Bitmap *that) {
+bool Bitmap::equals(Bitmap *that) {
   int32_size_t this_size = this->size();
   int32_size_t that_size = that->size();
   if (this_size.width() != that_size.width() || this_size.height() != that_size.height())
