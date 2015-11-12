@@ -33,37 +33,67 @@ private:
   int32_t argb_;
 };
 
-class Style {
+// A simple struct that may or may not hold a value.
+template <typename T>
+class Option {
 public:
-  Style();
-  void set_color(Color value) { color_ = value; }
-  Color color() { return color_; }
+  // Initializes an empty option.
+  Option() : has_value_(false) { }
 
-  void set_antialias(bool value) { antialias_ = value; }
-  bool antialias() { return antialias_; }
+  // Initializes an option with the given value.
+  Option(const T &value) : value_(value), has_value_(true) { }
+
+  // Returns this option's value. The option must have a value, otherwise the
+  // result is undefined.
+  const T &operator*() const { return value_; }
+
+  // Does this option hold a value?
+  bool has_value() const { return has_value_; }
 
 private:
-  Color color_;
-  bool antialias_;
+  T value_;
+  bool has_value_;
 };
 
-class TextStyle : public Style {
+// Configuration of how to paint when painting. The various settings start out
+// "transparent" in the sense that if you don't set say the color, the color
+// will not just be some default for this style but will be taken from some
+// underlying default style.
+class Style {
 public:
-  TextStyle();
-  void set_text_size(float value) { text_size_ = value; }
-  float text_size() { return text_size_; }
+  void set_color(Color value) { color_ = value; }
+  const Option<Color> &color() { return color_; }
+
+  void set_antialias(bool value) { antialias_ = value; }
+  const Option<bool> &antialias() { return antialias_; }
 
 private:
-  float text_size_;
+  Option<Color> color_;
+  Option<bool> antialias_;
+};
+
+// Additional styles relating to how to render text.
+class TextStyle : public Style {
+public:
+  void set_text_size(float value) { text_size_ = value; }
+  const Option<float> &text_size() { return text_size_; }
+
+private:
+  Option<float> text_size_;
 };
 
 class GraphicsContext {
 public:
   virtual ~GraphicsContext() { }
   virtual int32_size_t size() = 0;
-  virtual void draw_text(const char *message, int32_t x, int32_t y, TextStyle *style) = 0;
-  virtual void draw_line(int32_t x0, int32_t y0, int32_t x1, int32_t y1, Style *style) = 0;
+  virtual void draw_text(const char *message, int32_t x, int32_t y, TextStyle *style = NULL) = 0;
+  virtual void draw_line(int32_t x0, int32_t y0, int32_t x1, int32_t y1, Style *style = NULL) = 0;
   virtual void clear(Color color) = 0;
+
+  // Sets the default style to use for operations within this context. Any
+  // values set in the given style will be used for a given operation if the
+  // style passed explicitly to the operation doesn't define that option itself.
+  virtual void set_default_style(Style *style) = 0;
 };
 
 class MainWindow {

@@ -27,3 +27,19 @@ TEST(context, lines) {
   delete context;
   ASSERT_IMGEQ(&bitmap, "test_context_gradient_lines.png");
 }
+
+TEST(context, default_style) {
+  Bitmap bitmap;
+  ASSERT_TRUE(bitmap.init_empty(150, 100));
+  GraphicsContext *context = bitmap.new_context();
+  context->clear(Color::white());
+  Style style;
+  style.set_antialias(false);
+  style.set_color(Color::red());
+  context->set_default_style(&style);
+
+  context->draw_line(25, 25, 125, 75);
+  ASSERT_IMGEQ(&bitmap, "test_context_simple_line.png");
+
+  delete context;
+}

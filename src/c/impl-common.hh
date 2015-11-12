@@ -28,18 +28,21 @@ public:
   // Converts a matisse color to a skia one.
   static SkColor to_sk_color(Color color);
 
-  // Converts a matisse paint to a skia one.
+  // Converts a matisse style to a skia paint.
   SkPaint style_to_sk_paint(Style *style);
 
+  // Converts a matisse text style to a skia paint.
   SkPaint text_style_to_sk_paint(TextStyle *style);
 
   virtual int32_size_t size();
   virtual void draw_text(const char *message, int32_t x, int32_t y, TextStyle *style);
   virtual void draw_line(int32_t x0, int32_t y0, int32_t x1, int32_t y1, Style *style);
   virtual void clear(Color color);
+  virtual void set_default_style(Style *style);
 
 private:
   SkAutoTUnref<SkCanvas> canvas_;
+  SkPaint sk_default_paint_;
 };
 
 }

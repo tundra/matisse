@@ -18,12 +18,6 @@ using namespace matisse;
 Color::Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
   : argb_(SkColorSetARGB(a, r, g, b)) { }
 
-Style::Style()
-  : antialias_(false) { }
-
-TextStyle::TextStyle()
-  : text_size_(0) { }
-
 SkiaGraphicsContext::SkiaGraphicsContext(SkCanvas *canvas)
   : canvas_(canvas) {
   canvas->ref();
@@ -37,6 +31,11 @@ void SkiaGraphicsContext::clear(Color color) {
   canvas_->clear(to_sk_color(color));
 }
 
+void SkiaGraphicsContext::set_default_style(Style *style) {
+  sk_default_paint_ = SkPaint();
+  sk_default_paint_ = style_to_sk_paint(style);
+}
+
 void SkiaGraphicsContext::draw_text(const char *message, int32_t x, int32_t y,
     TextStyle *style) {
   SkPaint paint = text_style_to_sk_paint(style);
@@ -48,16 +47,20 @@ SkColor SkiaGraphicsContext::to_sk_color(Color color) {
 }
 
 SkPaint SkiaGraphicsContext::style_to_sk_paint(Style *style) {
-  SkPaint result;
-  result.setColor(to_sk_color(style->color()));
-  result.setAntiAlias(style->antialias());
+  if (style == NULL)
+    return sk_default_paint_;
+  SkPaint result = sk_default_paint_;
+  if (style->color().has_value())
+    result.setColor(to_sk_color(*style->color()));
+  if (style->antialias().has_value())
+    result.setAntiAlias(*style->antialias());
   return result;
 }
 
 SkPaint SkiaGraphicsContext::text_style_to_sk_paint(TextStyle *style) {
   SkPaint result = style_to_sk_paint(style);
-  if (style->text_size() != 0)
-    result.setTextSize(style->text_size());
+  if (style->text_size().has_value())
+    result.setTextSize(*style->text_size());
   return result;
 }
 
