@@ -25,8 +25,6 @@ TEST(image, compare) {
   ASSERT_IMGEQ(&a, "test_image_hello_chorus.png");
   GraphicsContext *context = a.new_context();
   context->draw_text(".", 10, 10);
-  // Fail on purpose to see what happens on the build slaves.
   ASSERT_FALSE(a.compare(&b));
-  ASSERT_IMGEQ(&a, "test_image_hello_chorus.png");
   delete context;
 }
