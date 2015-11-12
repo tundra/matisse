@@ -49,7 +49,8 @@ void TestHelpers::assert_imgeq(const char *file, int line, Bitmap *bitmap,
     return;
   char scratch[256];
   utf8_t image_path = get_failure_image_path(file, line, scratch);
-  FileStreams streams = FileSystem::native()->open(image_path, OPEN_FILE_MODE_WRITE);
+  FileStreams streams = FileSystem::native()->open(image_path,
+      OPEN_FILE_MODE_WRITE | OPEN_FILE_FLAG_BINARY);
   ASSERT_TRUE(bitmap->write_to_png(streams.out()));
   streams.close();
   fail(file, line, fail_fmt, image_path.chars);
