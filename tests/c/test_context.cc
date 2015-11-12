@@ -8,12 +8,22 @@
 using namespace matisse;
 using namespace tclib;
 
-TEST(context, paint) {
+TEST(context, lines) {
   Bitmap bitmap;
   ASSERT_TRUE(bitmap.init_empty(150, 100));
   GraphicsContext *context = bitmap.new_context();
-  context->clear();
-  context->draw_line(25, 25, 125, 75);
-  delete context;
+  context->clear(Color::white());
+  Style style;
+  style.set_antialias(false);
+  style.set_color(Color::red());
+  context->draw_line(25, 25, 125, 75, &style);
   ASSERT_IMGEQ(&bitmap, "test_context_simple_line.png");
+
+  context->clear(Color::gray(224));
+  for (int i = 25; i <= 125; i += 5) {
+    style.set_color(Color(0, 0, static_cast<uint8_t>(2 * i)));
+    context->draw_line(i, 25, i, 75, &style);
+  }
+  delete context;
+  ASSERT_IMGEQ(&bitmap, "test_context_gradient_lines.png");
 }

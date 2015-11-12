@@ -24,7 +24,10 @@ TEST(image, compare) {
   ASSERT_TRUE(a.equals(&b));
   ASSERT_IMGEQ(&a, "test_image_hello_chorus.png");
   GraphicsContext *context = a.new_context();
-  context->draw_text(".", 10, 10);
+  TextStyle style;
+  style.set_text_size(16);
+  style.set_color(Color::black());
+  context->draw_text(".", 75, 50, &style);
   ASSERT_FALSE(a.equals(&b));
   delete context;
 }

@@ -25,10 +25,19 @@ public:
   SkiaGraphicsContext(SkCanvas *canvas);
   ~SkiaGraphicsContext();
 
+  // Converts a matisse color to a skia one.
+  static SkColor to_sk_color(Color color);
+
+  // Converts a matisse paint to a skia one.
+  SkPaint style_to_sk_paint(Style *style);
+
+  SkPaint text_style_to_sk_paint(TextStyle *style);
+
   virtual int32_size_t size();
-  virtual void draw_text(const char *message, int32_t x, int32_t y);
-  virtual void draw_line(int32_t x0, int32_t y0, int32_t x1, int32_t y1);
-  virtual void clear();
+  virtual void draw_text(const char *message, int32_t x, int32_t y, TextStyle *style);
+  virtual void draw_line(int32_t x0, int32_t y0, int32_t x1, int32_t y1, Style *style);
+  virtual void clear(Color color);
+
 private:
   SkAutoTUnref<SkCanvas> canvas_;
 };

@@ -15,6 +15,15 @@ END_C_INCLUDES
 
 using namespace matisse;
 
+Color::Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
+  : argb_(SkColorSetARGB(a, r, g, b)) { }
+
+Style::Style()
+  : antialias_(false) { }
+
+TextStyle::TextStyle()
+  : text_size_(0) { }
+
 SkiaGraphicsContext::SkiaGraphicsContext(SkCanvas *canvas)
   : canvas_(canvas) {
   canvas->ref();
@@ -24,24 +33,38 @@ SkiaGraphicsContext::~SkiaGraphicsContext() {
   canvas_->flush();
 }
 
-void SkiaGraphicsContext::clear() {
-  canvas_->clear(SK_ColorWHITE);
+void SkiaGraphicsContext::clear(Color color) {
+  canvas_->clear(to_sk_color(color));
 }
 
-void SkiaGraphicsContext::draw_text(const char *message, int32_t x, int32_t y) {
-  SkPaint paint;
-  paint.setColor(SK_ColorDKGRAY);
-  paint.setTextSize(16);
-  paint.setTextAlign(SkPaint::kCenter_Align);
-  paint.setAntiAlias(false);
+void SkiaGraphicsContext::draw_text(const char *message, int32_t x, int32_t y,
+    TextStyle *style) {
+  SkPaint paint = text_style_to_sk_paint(style);
   canvas_->drawText(message, strlen(message), SkScalar(x), SkScalar(y), paint);
 }
 
-void SkiaGraphicsContext::draw_line(int32_t x0, int32_t y0, int32_t x1, int32_t y1) {
-  SkPaint paint;
-  paint.setColor(SK_ColorRED);
-  paint.setAntiAlias(false);
-  canvas_->drawLine(SkScalar(x0), SkScalar(y0), SkScalar(x1), SkScalar(y1), paint);
+SkColor SkiaGraphicsContext::to_sk_color(Color color) {
+  return color.argb();
+}
+
+SkPaint SkiaGraphicsContext::style_to_sk_paint(Style *style) {
+  SkPaint result;
+  result.setColor(to_sk_color(style->color()));
+  result.setAntiAlias(style->antialias());
+  return result;
+}
+
+SkPaint SkiaGraphicsContext::text_style_to_sk_paint(TextStyle *style) {
+  SkPaint result = style_to_sk_paint(style);
+  if (style->text_size() != 0)
+    result.setTextSize(style->text_size());
+  return result;
+}
+
+void SkiaGraphicsContext::draw_line(int32_t x0, int32_t y0, int32_t x1, int32_t y1,
+    Style *style) {
+  SkPaint sk_paint = style_to_sk_paint(style);
+  canvas_->drawLine(SkScalar(x0), SkScalar(y0), SkScalar(x1), SkScalar(y1), sk_paint);
 }
 
 int32_size_t SkiaGraphicsContext::size() {
