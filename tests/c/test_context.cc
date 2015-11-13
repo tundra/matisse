@@ -59,4 +59,5 @@ TEST(context, ttf_font) {
   context->draw_text("Hello", 10, 40, &style);
   context->draw_text("Matisse", 10, 80, &style);
   ASSERT_IMGEQ_WITH_TAG(&bitmap, "test_context_ttf_font.png", 100);
+  delete context;
 }

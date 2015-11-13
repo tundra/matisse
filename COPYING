@@ -5,7 +5,7 @@ with the exception of the following:
 
 - tests/c/resources/Minecraft.ttf
   By Craftron Gaming, downloaded from http://www.fontriver.com/font/minecraft/.
-  No explicit license or copyright; listed as "100% free".
+  No explicit license; listed as "100% free".
 
 - The skia library is not included in this source tree but is downloaded on
   demand. Those files are covered by the license contained in the downloaded
