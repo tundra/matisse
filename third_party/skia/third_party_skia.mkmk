@@ -5,7 +5,7 @@ import os.path
 
 BASE_URL = "https://tundrastorage.blob.core.windows.net/libskia"
 VERSION = "0_0_5"
-IS_DEBUG = True
+IS_DEBUG = False
 
 platform_info = get_platform_info()
 opsys = "win" if platform_info.is_windows() else "lnx"
