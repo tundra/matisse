@@ -45,4 +45,11 @@ private:
   SkPaint sk_default_paint_;
 };
 
+// Misc convenient utilities.
+class Utils {
+public:
+  // Reads the full contents of the given stream into the given byte vector.
+  static bool read_in_stream(tclib::InStream *in, std::vector<byte_t> *out);
+};
+
 }

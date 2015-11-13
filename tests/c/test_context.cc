@@ -4,6 +4,7 @@
 #include "context.hh"
 #include "helpers.hh"
 #include "test/unittest.hh"
+#include "io/file.hh"
 
 using namespace matisse;
 using namespace tclib;
@@ -47,6 +48,9 @@ TEST(context, default_style) {
 TEST(context, ttf_font) {
   char scratch[256];
   utf8_t font_file = TestHelpers::get_test_resource_path("resources/Minecraft.ttf", scratch);
+  FileStreams streams = FileSystem::native()->open(font_file, OPEN_FILE_MODE_READ);
+  Typeface minecraft = Typeface::read(streams.in());
+  streams.close();
 
   Bitmap bitmap;
   ASSERT_TRUE(bitmap.init_empty(150, 100));
@@ -54,7 +58,8 @@ TEST(context, ttf_font) {
   context->clear(Color::white());
   TextStyle style;
   style.set_antialias(false);
-  style.set_typeface(font_file);
+  style.set_color(Color::black());
+  style.set_typeface(minecraft);
   style.set_text_size(16);
   context->draw_text("Hello", 10, 40, &style);
   context->draw_text("Matisse", 10, 80, &style);

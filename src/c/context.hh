@@ -8,6 +8,8 @@
 
 #include "image.hh"
 
+class SkTypeface;
+
 namespace matisse {
 
 // An RGBA color. These are lightweight so don't worry about passing them by
@@ -45,7 +47,10 @@ public:
 
   // Returns this option's value. The option must have a value, otherwise the
   // result is undefined.
-  const T &operator*() const { return value_; }
+  const T &operator*() const { return value(); }
+
+  // Alias for *.
+  const T &value() const { return value_; }
 
   // Does this option hold a value?
   bool has_value() const { return has_value_; }
@@ -72,18 +77,45 @@ private:
   Option<bool> antialias_;
 };
 
+// A typeface. The underlying data is reasonably heavy-weight but is ref-counted
+// so you can pass them around by value and the underlying data will be shared
+// and disposed only after the last reference goes away.
+class Typeface {
+public:
+  Typeface() : sk_typeface_(NULL) { }
+
+  // Create a matisse typeface based on an sk one. The typeface is passed
+  // ownership of the sk-typeface so if you want to retain ownership you need
+  // to explicitly ref the sk-typeface.
+  Typeface(SkTypeface *sk_typeface);
+
+  // Implements the ref-counting behavior.
+  Typeface(const Typeface &that);
+  ~Typeface();
+  const Typeface &operator=(const Typeface &that);
+
+  // Reads and returns a typeface from the given input stream.
+  static Typeface read(tclib::InStream *in);
+
+  // Returns the underlying skia typeface.
+  SkTypeface *sk_typeface() const { return sk_typeface_; }
+
+private:
+  SkTypeface *sk_typeface_;
+};
+
 // Additional styles relating to how to render text.
 class TextStyle : public Style {
 public:
   void set_text_size(float value) { text_size_ = value; }
   const Option<float> &text_size() { return text_size_; }
 
-  void set_typeface(utf8_t filename) { typeface_ = filename; }
-  const Option<utf8_t> &typeface() { return typeface_; }
+  void set_typeface(Typeface typeface) { typeface_ = typeface; }
+  const Option<Typeface> &typeface() { return typeface_; }
 
 private:
   Option<float> text_size_;
-  Option<utf8_t> typeface_;
+  Option<Typeface> typeface_;
 };
 
 class GraphicsContext {

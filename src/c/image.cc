@@ -33,7 +33,7 @@ Bitmap::~Bitmap() {
 }
 
 // Reads the full contents of the given stream into the given byte vector.
-static bool read_in_stream(InStream *in, std::vector<byte_t> *out) {
+bool Utils::read_in_stream(InStream *in, std::vector<byte_t> *out) {
   while (true) {
     static const size_t kBufSize = 1024;
     byte_t raw_buffer[kBufSize];
@@ -53,7 +53,7 @@ bool Bitmap::read_from_png(InStream *in) {
   // This call doesn't actually do anything, it just has to be somewhere.
   matisse_force_decoder_linking(false);
   std::vector<byte_t> bytes;
-  if (!read_in_stream(in, &bytes))
+  if (!Utils::read_in_stream(in, &bytes))
     return false;
   return SkImageDecoder::DecodeMemory(bytes.data(), bytes.size(),
       &data_->sk_bitmap_);

@@ -61,12 +61,42 @@ SkPaint SkiaGraphicsContext::text_style_to_sk_paint(TextStyle *style) {
   SkPaint result = style_to_sk_paint(style);
   if (style->text_size().has_value())
     result.setTextSize(*style->text_size());
-  if (style->typeface().has_value()) {
-    // TODO: factor this out so typefaces can be reused across styles.
-    SkTypeface *typeface = SkTypeface::CreateFromFile((*style->typeface()).chars);
-    result.setTypeface(typeface);
-  }
+  if (style->typeface().has_value())
+    result.setTypeface(style->typeface().value().sk_typeface());
   return result;
+}
+
+Typeface Typeface::read(tclib::InStream *in) {
+  std::vector<uint8_t> data;
+  if (!Utils::read_in_stream(in, &data))
+    return Typeface();
+  // The stream will be oned by the typeface so we need to copy the data out
+  // of the vector.
+  SkMemoryStream *stream = new SkMemoryStream(data.data(), data.size(),
+      /*copyData*/ true);
+  // Ownership of the stream is transferred so no need to delete it.
+  SkTypeface *sk_typeface = SkTypeface::CreateFromStream(stream);
+  return Typeface(sk_typeface);
+}
+
+Typeface::Typeface(SkTypeface *sk_typeface)
+  : sk_typeface_(sk_typeface) { }
+
+Typeface::~Typeface() {
+  SkSafeUnref(sk_typeface_);
+}
+
+Typeface::Typeface(const Typeface &that) : sk_typeface_(that.sk_typeface_) {
+  SkSafeRef(sk_typeface_);
+}
+
+const Typeface &Typeface::operator=(const Typeface &that) {
+  if (that.sk_typeface_ != this->sk_typeface_) {
+    SkSafeUnref(sk_typeface_);
+    sk_typeface_ = that.sk_typeface_;
+    SkSafeRef(sk_typeface_);
+  }
+  return *this;
 }
 
 void SkiaGraphicsContext::draw_line(int32_t x0, int32_t y0, int32_t x1, int32_t y1,
