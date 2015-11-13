@@ -61,3 +61,12 @@ void TestHelpers::assert_imgeq(const char *file, int line, int tag, Bitmap *bitm
   streams.close();
   fail(file, line, fail_fmt, image_path.chars);
 }
+
+Typeface TestHelpers::read_minecraft_typeface() {
+  char scratch[1024];
+  utf8_t font_file = TestHelpers::get_test_resource_path("resources/Minecraft.ttf", scratch);
+  FileStreams streams = FileSystem::native()->open(font_file, OPEN_FILE_MODE_READ);
+  Typeface minecraft = Typeface::read(streams.in());
+  streams.close();
+  return minecraft;
+}

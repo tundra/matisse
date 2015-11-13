@@ -46,12 +46,7 @@ TEST(context, default_style) {
 }
 
 TEST(context, ttf_font) {
-  char scratch[256];
-  utf8_t font_file = TestHelpers::get_test_resource_path("resources/Minecraft.ttf", scratch);
-  FileStreams streams = FileSystem::native()->open(font_file, OPEN_FILE_MODE_READ);
-  Typeface minecraft = Typeface::read(streams.in());
-  streams.close();
-
+  Typeface minecraft = TestHelpers::read_minecraft_typeface();
   Bitmap bitmap;
   ASSERT_TRUE(bitmap.init_empty(150, 100));
   GraphicsContext *context = bitmap.new_context();
@@ -63,6 +58,7 @@ TEST(context, ttf_font) {
   style.set_text_size(16);
   context->draw_text("Hello", 10, 40, &style);
   context->draw_text("Matisse", 10, 80, &style);
-  ASSERT_IMGEQ_WITH_TAG(&bitmap, "test_context_ttf_font.png", 100);
+  ASSERT_IMGEQ(&bitmap, "test_context_ttf_font.png");
   delete context;
 }
+

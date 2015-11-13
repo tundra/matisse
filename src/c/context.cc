@@ -33,12 +33,13 @@ void SkiaGraphicsContext::clear(Color color) {
 
 void SkiaGraphicsContext::set_default_style(Style *style) {
   sk_default_paint_ = SkPaint();
-  sk_default_paint_ = style_to_sk_paint(style);
+  style_to_sk_paint(style, &sk_default_paint_);
 }
 
 void SkiaGraphicsContext::draw_text(const char *message, int32_t x, int32_t y,
     TextStyle *style) {
-  SkPaint paint = text_style_to_sk_paint(style);
+  SkPaint paint = sk_default_paint_;
+  text_style_to_sk_paint(style, &paint);
   canvas_->drawText(message, strlen(message), SkScalar(x), SkScalar(y), paint);
 }
 
@@ -46,24 +47,23 @@ SkColor SkiaGraphicsContext::to_sk_color(Color color) {
   return color.argb();
 }
 
-SkPaint SkiaGraphicsContext::style_to_sk_paint(Style *style) {
+void SkiaGraphicsContext::style_to_sk_paint(Style *style, SkPaint *out) {
   if (style == NULL)
-    return sk_default_paint_;
-  SkPaint result = sk_default_paint_;
+    return;
   if (style->color().has_value())
-    result.setColor(to_sk_color(*style->color()));
+    out->setColor(to_sk_color(*style->color()));
   if (style->antialias().has_value())
-    result.setAntiAlias(*style->antialias());
-  return result;
+    out->setAntiAlias(*style->antialias());
 }
 
-SkPaint SkiaGraphicsContext::text_style_to_sk_paint(TextStyle *style) {
-  SkPaint result = style_to_sk_paint(style);
+void SkiaGraphicsContext::text_style_to_sk_paint(TextStyle *style, SkPaint *out) {
+  if (style == NULL)
+    return;
+  style_to_sk_paint(style, out);
   if (style->text_size().has_value())
-    result.setTextSize(*style->text_size());
+    out->setTextSize(*style->text_size());
   if (style->typeface().has_value())
-    result.setTypeface(style->typeface().value().sk_typeface());
-  return result;
+    out->setTypeface(style->typeface().value().sk_typeface());
 }
 
 Typeface Typeface::read(tclib::InStream *in) {
@@ -101,8 +101,9 @@ const Typeface &Typeface::operator=(const Typeface &that) {
 
 void SkiaGraphicsContext::draw_line(int32_t x0, int32_t y0, int32_t x1, int32_t y1,
     Style *style) {
-  SkPaint sk_paint = style_to_sk_paint(style);
-  canvas_->drawLine(SkScalar(x0), SkScalar(y0), SkScalar(x1), SkScalar(y1), sk_paint);
+  SkPaint paint = sk_default_paint_;
+  style_to_sk_paint(style, &paint);
+  canvas_->drawLine(SkScalar(x0), SkScalar(y0), SkScalar(x1), SkScalar(y1), paint);
 }
 
 int32_size_t SkiaGraphicsContext::size() {

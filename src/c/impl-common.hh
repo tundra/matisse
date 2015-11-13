@@ -29,10 +29,10 @@ public:
   static SkColor to_sk_color(Color color);
 
   // Converts a matisse style to a skia paint.
-  SkPaint style_to_sk_paint(Style *style);
+  static void style_to_sk_paint(Style *style, SkPaint *out);
 
   // Converts a matisse text style to a skia paint.
-  SkPaint text_style_to_sk_paint(TextStyle *style);
+  static void text_style_to_sk_paint(TextStyle *style, SkPaint *out);
 
   virtual int32_size_t size();
   virtual void draw_text(const char *message, int32_t x, int32_t y, TextStyle *style);

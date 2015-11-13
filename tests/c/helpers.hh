@@ -6,6 +6,7 @@
 
 #include "test/asserts.hh"
 #include "image.hh"
+#include "context.hh"
 
 namespace matisse {
 
@@ -40,6 +41,9 @@ public:
   // Returns the path to a test resource relative to the current working
   // directory. The resource name must be relative to tests/c.
   static utf8_t get_test_resource_path(const char *relpath, char *scratch);
+
+  // Reads and returns the minecraft typeface.
+  static Typeface read_minecraft_typeface();
 };
 
 } // namespace matisse

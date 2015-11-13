@@ -4,6 +4,7 @@
 filenames = [
   "context.cc",
   "image.cc",
+  "text_canvas.cc",
 ]
 
 library = get_group("library")
