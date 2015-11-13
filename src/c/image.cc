@@ -32,7 +32,6 @@ Bitmap::~Bitmap() {
   delete data_;
 }
 
-// Reads the full contents of the given stream into the given byte vector.
 bool Utils::read_in_stream(InStream *in, std::vector<byte_t> *out) {
   while (true) {
     static const size_t kBufSize = 1024;
