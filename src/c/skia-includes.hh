@@ -35,6 +35,7 @@
 #include "core/SkPaint.h"
 #include "core/SkPath.h"
 #include "core/SkRRect.h"
+#include "core/SkTypeface.h"
 #include "core/SkTypes.h"
 #include "effects/SkDashPathEffect.h"
 #include "views/SkApplication.h"

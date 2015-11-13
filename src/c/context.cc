@@ -61,6 +61,10 @@ SkPaint SkiaGraphicsContext::text_style_to_sk_paint(TextStyle *style) {
   SkPaint result = style_to_sk_paint(style);
   if (style->text_size().has_value())
     result.setTextSize(*style->text_size());
+  if (style->typeface().has_value()) {
+    SkTypeface *typeface = SkTypeface::CreateFromFile((*style->typeface()).chars);
+    result.setTypeface(typeface);
+  }
   return result;
 }
 

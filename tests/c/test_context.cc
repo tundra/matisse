@@ -43,3 +43,20 @@ TEST(context, default_style) {
 
   delete context;
 }
+
+TEST(context, ttf_font) {
+  char scratch[256];
+  utf8_t font_file = TestHelpers::get_test_resource_path("resources/Minecraft.ttf", scratch);
+
+  Bitmap bitmap;
+  ASSERT_TRUE(bitmap.init_empty(150, 100));
+  GraphicsContext *context = bitmap.new_context();
+  context->clear(Color::white());
+  TextStyle style;
+  style.set_antialias(false);
+  style.set_typeface(font_file);
+  style.set_text_size(16);
+  context->draw_text("Hello", 10, 40, &style);
+  context->draw_text("Matisse", 10, 80, &style);
+  ASSERT_IMGEQ_WITH_TAG(&bitmap, "test_context_ttf_font.png", 100);
+}

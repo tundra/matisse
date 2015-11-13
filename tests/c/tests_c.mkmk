@@ -34,7 +34,7 @@ test_main.get_settings().set_local("subsystem", "CONSOLE", toolchain="msvc")
 test_main.add_object(test_library)
 
 run_tests = add_alias("run-tests")
-IMAGES_PATH = get_source_file("images").get_input_file().get_path()
+C_TEST_ROOT = get_file().get_path()
 
 # Add targets to run the test cases.
 for test_file_name in test_file_names:
@@ -45,7 +45,7 @@ for test_file_name in test_file_names:
     continue
   test_case = test.get_exec_test_case(test_file_name)
   test_case.set_runner(test_main)
-  test_case.add_env("TEST_IMAGES", IMAGES_PATH)
+  test_case.add_env("C_TEST_ROOT", C_TEST_ROOT)
   stripped_test_case_name = re.match(r"test_(\w+).c", test_file_name).group(1)
   test_case.set_arguments(stripped_test_case_name)
   run_tests.add_member(test_case)

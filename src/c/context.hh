@@ -78,8 +78,12 @@ public:
   void set_text_size(float value) { text_size_ = value; }
   const Option<float> &text_size() { return text_size_; }
 
+  void set_typeface(utf8_t filename) { typeface_ = filename; }
+  const Option<utf8_t> &typeface() { return typeface_; }
+
 private:
   Option<float> text_size_;
+  Option<utf8_t> typeface_;
 };
 
 class GraphicsContext {

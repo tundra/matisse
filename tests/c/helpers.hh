@@ -36,6 +36,10 @@ public:
   // Performs an ASSERT_IMGEQ.
   static void assert_imgeq(const char *file, int line, int tag, Bitmap *bitmap,
       const char *imgfile, const char *fail_fmt);
+
+  // Returns the path to a test resource relative to the current working
+  // directory. The resource name must be relative to tests/c.
+  static utf8_t get_test_resource_path(const char *relpath, char *scratch);
 };
 
 } // namespace matisse

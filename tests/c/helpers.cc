@@ -15,16 +15,22 @@ using namespace matisse;
 using namespace tclib;
 
 // Returns the path to the durian executable.
-static utf8_t get_full_test_path(char *scratch, const char *filename) {
-  const char *root = getenv("TEST_IMAGES");
+static utf8_t get_test_image_path(char *scratch, const char *filename) {
+  char resource_path[256];
+  sprintf(resource_path, "images/%s", filename);
+  return TestHelpers::get_test_resource_path(resource_path, scratch);
+}
+
+utf8_t TestHelpers::get_test_resource_path(const char *relpath, char *scratch) {
+  const char *root = getenv("C_TEST_ROOT");
   ASSERT_TRUE(root != NULL);
-  int size = sprintf(scratch, "%s/%s", root, filename);
+  int size = sprintf(scratch, "%s/%s", root, relpath);
   return new_string(scratch, size);
 }
 
 bool TestHelpers::read_test_image(const char *filename, Bitmap *out) {
   char scratch[256];
-  utf8_t full_path = get_full_test_path(scratch, filename);
+  utf8_t full_path = get_test_image_path(scratch, filename);
   FileStreams streams = FileSystem::native()->open(full_path, OPEN_FILE_MODE_READ);
   if (!out->read_from_png(streams.in()))
     return false;
