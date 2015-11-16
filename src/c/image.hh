@@ -44,6 +44,9 @@ public:
   // Returns true iff this bitmap is pixel-by-pixel equal to the given one.
   bool equals(Bitmap *that);
 
+  // Returns a measure of how different this bitmap is to the given one.
+  double compare(Bitmap *that);
+
   // Returns a new context for drawing on this bitmap.
   GraphicsContext *new_context();
 

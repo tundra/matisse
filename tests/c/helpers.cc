@@ -48,10 +48,11 @@ static utf8_t get_failure_image_path(const char *file, int tag, char *scratch) {
 }
 
 void TestHelpers::assert_imgeq(const char *file, int line, int tag, Bitmap *bitmap,
-    const char *imgfile, const char *fail_fmt) {
+    const char *imgfile, double tolerance, const char *fail_fmt) {
   Bitmap expected;
   ASSERT_TRUE(read_test_image(imgfile, &expected));
-  if (expected.equals(bitmap))
+  double diff = 100 * expected.compare(bitmap);
+  if (diff <= tolerance)
     return;
   char scratch[256];
   utf8_t image_path = get_failure_image_path(file, tag, scratch);
@@ -59,14 +60,23 @@ void TestHelpers::assert_imgeq(const char *file, int line, int tag, Bitmap *bitm
       OPEN_FILE_MODE_WRITE | OPEN_FILE_FLAG_BINARY);
   ASSERT_TRUE(bitmap->write_to_png(streams.out()));
   streams.close();
-  fail(file, line, fail_fmt, image_path.chars);
+  fail(file, line, fail_fmt, diff, image_path.chars);
 }
 
-Typeface TestHelpers::read_monospace_typeface() {
+Typeface TestHelpers::read_monospace_bitmap_typeface() {
   char scratch[1024];
   utf8_t font_file = TestHelpers::get_test_resource_path("resources/ProFont/ProFontWindows.ttf", scratch);
   FileStreams streams = FileSystem::native()->open(font_file, OPEN_FILE_MODE_READ);
-  Typeface minecraft = Typeface::read(streams.in());
+  Typeface typeface = Typeface::read(streams.in());
   streams.close();
-  return minecraft;
+  return typeface;
+}
+
+Typeface TestHelpers::read_sans_serif_typeface() {
+  char scratch[1024];
+  utf8_t font_file = TestHelpers::get_test_resource_path("resources/DejaVu/DejaVuSans.ttf", scratch);
+  FileStreams streams = FileSystem::native()->open(font_file, OPEN_FILE_MODE_READ);
+  Typeface typeface = Typeface::read(streams.in());
+  streams.close();
+  return typeface;
 }

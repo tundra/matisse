@@ -93,19 +93,28 @@ GraphicsContext *Bitmap::new_context() {
 }
 
 bool Bitmap::equals(Bitmap *that) {
+  return compare(that) == 0;
+}
+
+double Bitmap::compare(Bitmap *that) {
   int32_size_t this_size = this->size();
   int32_size_t that_size = that->size();
   if (this_size.width() != that_size.width() || this_size.height() != that_size.height())
-    return false;
+    return 1;
+  int32_t points_different = 0;
+  int32_t points_compared = 0;
   for (int x = 0; x < this_size.width(); x++) {
     for (int y = 0; y < this_size.height(); y++) {
       SkColor this_pixel = data_->sk_bitmap_.getColor(x, y);
       SkColor that_pixel = that->data_->sk_bitmap_.getColor(x, y);
+      if (this_pixel != SK_ColorWHITE || that_pixel != SK_ColorWHITE)
+        points_compared++;
       if (this_pixel != that_pixel)
-        return false;
+        points_different++;
     }
   }
-  return true;
+  return static_cast<double>(points_different) / points_compared;
+
 }
 
 void matisse_force_decoder_linking(bool not_true) {

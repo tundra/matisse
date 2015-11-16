@@ -47,27 +47,50 @@ TEST(context, default_style) {
 }
 
 TEST(context, ttf_font) {
-  Typeface monospace = TestHelpers::read_monospace_typeface();
   Bitmap bitmap;
   ASSERT_TRUE(bitmap.init_empty(150, 100));
   GraphicsContext *context = bitmap.new_context();
   TextStyle style;
   style.set_antialias(false);
   style.set_color(Color::black());
-  style.set_typeface(monospace);
+  style.set_typeface(TestHelpers::read_monospace_bitmap_typeface());
 
-  style.set_text_size(TestHelpers::kMonospaceTypefacePreferredSize);
+  style.set_text_size(TestHelpers::kMonospaceBitmapTypefacePreferredSize);
   context->clear(Color::white());
   context->draw_text("Hello", 10, 40, &style);
   context->draw_text("Matisse", 10, 80, &style);
   ASSERT_IMGEQ(&bitmap, "test_context_ttf_font.png");
 
-  style.set_text_size(TestHelpers::kMonospaceTypefaceBigSize);
+  style.set_text_size(TestHelpers::kMonospaceBitmapTypefaceBigSize);
   context->clear(Color::white());
   context->draw_text("Hello", 10, 40, &style);
   context->draw_text("Matisse", 10, 80, &style);
   ASSERT_IMGEQ(&bitmap, "test_context_ttf_font_big.png");
 
+  style.set_typeface(TestHelpers::read_sans_serif_typeface());
+  style.set_text_size(24);
+  context->clear(Color::white());
+  context->draw_text("Hello", 10, 40, &style);
+  context->draw_text("Matisse", 10, 80, &style);
+  ASSERT_IMGEQ_WITH_TOLERANCE(&bitmap, "test_context_ttf_sans_serif.png", 1);
+
   delete context;
 }
 
+TEST(context, complex) {
+  Typeface sans_serif = TestHelpers::read_sans_serif_typeface();
+  Bitmap bitmap;
+  ASSERT_TRUE(bitmap.init_empty(150, 100));
+  GraphicsContext *context = bitmap.new_context();
+  TextStyle style;
+  style.set_text_size(18);
+  style.set_antialias(false);
+  style.set_color(Color::black());
+  style.set_typeface(sans_serif);
+
+  context->clear(Color::white());
+  context->draw_text("Hello\xcc\x86\xcc\xa7\xcc\xb6?", 25, 50, &style);
+  ASSERT_IMGEQ_WITH_TOLERANCE(&bitmap, "test_context_combining_diacritics.png", 1);
+
+  delete context;
+}

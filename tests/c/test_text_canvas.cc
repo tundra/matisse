@@ -14,7 +14,7 @@ TEST(text_canvas, bounds) {
   TextCanvas canvas(80, 24);
   canvas.set_margin(1);
   TextStyle style;
-  style.set_typeface(TestHelpers::read_monospace_typeface());
+  style.set_typeface(TestHelpers::read_monospace_bitmap_typeface());
   canvas.set_style(&style);
   int32_size_t size = canvas.calc_canvas_size();
   ASSERT_EQ(482, size.width());
@@ -24,9 +24,9 @@ TEST(text_canvas, bounds) {
 TEST(text_canvas, really_simple) {
   TextCanvas canvas(12, 8);
   TextStyle style;
-  style.set_typeface(TestHelpers::read_monospace_typeface());
+  style.set_typeface(TestHelpers::read_monospace_bitmap_typeface());
   style.set_color(Color::black());
-  style.set_text_size(TestHelpers::kMonospaceTypefacePreferredSize);
+  style.set_text_size(TestHelpers::kMonospaceBitmapTypefacePreferredSize);
   canvas.set_style(&style);
   canvas.set_margin(1);
   Bitmap bitmap;
