@@ -71,6 +71,18 @@ bool TextGlyph::is_empty() {
   return as_utf8()[0] == '\0';
 }
 
+// Info about the font used to draw glyphs.
+struct GlyphFontInfo {
+  // With of a glyph, including spacing.
+  scalar_t width_per_glyph;
+  // Preferred line height.
+  scalar_t height_per_line;
+  // Distance from the baseline to the top of the text.
+  scalar_t ascent;
+  // Distance from the baseline to the bottom of the text.
+  scalar_t descent;
+};
+
 // A text canvas is responsible for rendering a square block of text (that is,
 // the contents of the text terminal) on a graphics context.
 class TextCanvas {
@@ -91,18 +103,18 @@ public:
   void render(GraphicsContext *context);
 
   // Sets the empty margin around the text.
-  void set_margin(uint32_t margin) { margin_ = margin; }
+  void set_margin(scalar_t margin) { margin_ = margin; }
 
 private:
   // The total number of glyphs.
   size_t glyph_count() { return width_ * height_; }
 
   // The size of an individual glyph.
-  int32_size_t calc_glyph_size();
+  GlyphFontInfo calc_glyph_font_info();
 
   uint32_t width_;
   uint32_t height_;
-  uint32_t margin_;
+  scalar_t margin_;
   TextStyle *style_;
   TextGlyph *glyphs_;
 };

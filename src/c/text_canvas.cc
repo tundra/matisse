@@ -7,6 +7,7 @@
 #include "impl-common.hh"
 
 BEGIN_C_INCLUDES
+#include "utils/alloc.h"
 #include "utils/string-inl.h"
 END_C_INCLUDES
 
@@ -72,37 +73,48 @@ TextGlyph &TextCanvas::at(uint32_t x, uint32_t y) {
 
 void TextCanvas::render(GraphicsContext *context) {
   context->clear(Color::white());
-  int32_size_t glyph_size = calc_glyph_size();
+  GlyphFontInfo font_info = calc_glyph_font_info();
   for (uint32_t cy = 0; cy < height_; cy++) {
+    std::vector<char> line;
     for (uint32_t cx = 0; cx < width_; cx++) {
       TextGlyph &glyph = at(cx, cy);
       if (glyph.is_empty())
         continue;
-      const char *c = glyph.as_utf8();
-      uint32_t px = margin_ + cx * glyph_size.width();
-      uint32_t py = margin_ + (cy + 1) * glyph_size.height();
-      context->draw_text(c, px, py, style_);
+      utf8_t utf8 = new_c_string(glyph.as_utf8());
+      char *chars = const_cast<char*>(utf8.chars);
+      line.insert(line.end(), chars, chars + utf8.size);
     }
+    line.push_back('\0');
+    SkScalar px = margin_;
+    SkScalar py = margin_ + font_info.ascent + SkScalar(cy) * font_info.height_per_line;
+    context->draw_text(line.data(), px, py, style_);
   }
 }
 
 int32_size_t TextCanvas::calc_canvas_size() {
-  int32_size_t glyph = calc_glyph_size();
-  return int32_size_t(width_ * glyph.width() + 2 * margin_, height_ * glyph.height() + 2 * margin_);
+  GlyphFontInfo glyph = calc_glyph_font_info();
+  // The width of one row, just the characters.
+  scalar_t row_width = scalar_t(width_) * glyph.width_per_glyph;
+  // The canvas width which includes margins etc.
+  scalar_t canvas_width = row_width + 2 * margin_;
+  scalar_t column_height = scalar_t(height_ - 1) * glyph.height_per_line;
+  scalar_t canvas_height = column_height + 2 * margin_ + glyph.ascent + glyph.descent;
+  return int32_size_t(int32_t(canvas_width), int32_t(canvas_height));
 }
 
-int32_size_t TextCanvas::calc_glyph_size() {
+GlyphFontInfo TextCanvas::calc_glyph_font_info() {
   SkPaint paint;
   SkiaGraphicsContext::text_style_to_sk_paint(style_, &paint);
-  SkRect bounds = SkRect::MakeEmpty();
-  // This is a little silly but okay, it works.
-  static const char *kChars = "Xmky";
-  for (const char *p = kChars; *p != '\0'; p++) {
-    SkRect char_bounds;
-    paint.measureText(p, 1, &char_bounds);
-    bounds.growToInclude(char_bounds.width(), char_bounds.height());
-  }
-  static const int32_t kGlyphMargin = 1;
-  return int32_size_t((int32_t) bounds.width() + kGlyphMargin,
-      (int32_t) bounds.height() + kGlyphMargin);
+  SkPaint::FontMetrics metrics;
+  struct_zero_fill(metrics);
+  SkScalar height_per_line = paint.getFontMetrics(&metrics);
+  SkScalar width_per_glyph = 0;
+  paint.getTextWidths("X", 1, &width_per_glyph);
+  GlyphFontInfo info = {
+      width_per_glyph,
+      height_per_line,
+      -metrics.fAscent,
+      metrics.fDescent
+  };
+  return info;
 }

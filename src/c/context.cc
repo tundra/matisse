@@ -36,11 +36,11 @@ void SkiaGraphicsContext::set_default_style(Style *style) {
   style_to_sk_paint(style, &sk_default_paint_);
 }
 
-void SkiaGraphicsContext::draw_text(const char *message, int32_t x, int32_t y,
+void SkiaGraphicsContext::draw_text(const char *message, scalar_t x, scalar_t y,
     TextStyle *style) {
   SkPaint paint = sk_default_paint_;
   text_style_to_sk_paint(style, &paint);
-  canvas_->drawText(message, strlen(message), SkScalar(x), SkScalar(y), paint);
+  canvas_->drawText(message, strlen(message), x, y, paint);
 }
 
 SkColor SkiaGraphicsContext::to_sk_color(Color color) {
@@ -99,11 +99,11 @@ const Typeface &Typeface::operator=(const Typeface &that) {
   return *this;
 }
 
-void SkiaGraphicsContext::draw_line(int32_t x0, int32_t y0, int32_t x1, int32_t y1,
+void SkiaGraphicsContext::draw_line(scalar_t x0, scalar_t y0, scalar_t x1, scalar_t y1,
     Style *style) {
   SkPaint paint = sk_default_paint_;
   style_to_sk_paint(style, &paint);
-  canvas_->drawLine(SkScalar(x0), SkScalar(y0), SkScalar(x1), SkScalar(y1), paint);
+  canvas_->drawLine(x0, y0, x1, y1, paint);
 }
 
 int32_size_t SkiaGraphicsContext::size() {

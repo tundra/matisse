@@ -23,7 +23,8 @@ TEST(context, lines) {
   context->clear(Color::gray(224));
   for (int i = 25; i <= 125; i += 5) {
     style.set_color(Color(0, 0, static_cast<uint8_t>(2 * i)));
-    context->draw_line(i, 25, i, 75, &style);
+    context->draw_line(scalar_t(i), scalar_t(25), scalar_t(i), scalar_t(75),
+        &style);
   }
   delete context;
   ASSERT_IMGEQ(&bitmap, "test_context_gradient_lines.png");
@@ -46,7 +47,7 @@ TEST(context, default_style) {
 }
 
 TEST(context, ttf_font) {
-  Typeface minecraft = TestHelpers::read_minecraft_typeface();
+  Typeface monospace = TestHelpers::read_monospace_typeface();
   Bitmap bitmap;
   ASSERT_TRUE(bitmap.init_empty(150, 100));
   GraphicsContext *context = bitmap.new_context();
@@ -54,8 +55,8 @@ TEST(context, ttf_font) {
   TextStyle style;
   style.set_antialias(false);
   style.set_color(Color::black());
-  style.set_typeface(minecraft);
-  style.set_text_size(16);
+  style.set_typeface(monospace);
+  style.set_text_size(TestHelpers::kMonospaceTypefacePreferredSize);
   context->draw_text("Hello", 10, 40, &style);
   context->draw_text("Matisse", 10, 80, &style);
   ASSERT_IMGEQ(&bitmap, "test_context_ttf_font.png");

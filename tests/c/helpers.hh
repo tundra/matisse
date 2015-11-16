@@ -42,8 +42,12 @@ public:
   // directory. The resource name must be relative to tests/c.
   static utf8_t get_test_resource_path(const char *relpath, char *scratch);
 
-  // Reads and returns the minecraft typeface.
-  static Typeface read_minecraft_typeface();
+  // Reads and returns the monospace typeface.
+  static Typeface read_monospace_typeface();
+
+  // The monospace typeface is a bitmap font and this is the "natural" size for
+  // the bitmaps.
+  static const int32_t kMonospaceTypefacePreferredSize = 14;
 };
 
 } // namespace matisse

@@ -118,12 +118,15 @@ private:
   Option<Typeface> typeface_;
 };
 
+// The scalar type used to specify coordinates when using a graphics context.
+typedef float scalar_t;
+
 class GraphicsContext {
 public:
   virtual ~GraphicsContext() { }
   virtual int32_size_t size() = 0;
-  virtual void draw_text(const char *message, int32_t x, int32_t y, TextStyle *style = NULL) = 0;
-  virtual void draw_line(int32_t x0, int32_t y0, int32_t x1, int32_t y1, Style *style = NULL) = 0;
+  virtual void draw_text(const char *message, scalar_t x, scalar_t y, TextStyle *style = NULL) = 0;
+  virtual void draw_line(scalar_t x0, scalar_t y0, scalar_t x1, scalar_t y1, Style *style = NULL) = 0;
   virtual void clear(Color color) = 0;
 
   // Sets the default style to use for operations within this context. Any

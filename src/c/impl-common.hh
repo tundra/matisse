@@ -35,8 +35,8 @@ public:
   static void text_style_to_sk_paint(TextStyle *style, SkPaint *out);
 
   virtual int32_size_t size();
-  virtual void draw_text(const char *message, int32_t x, int32_t y, TextStyle *style);
-  virtual void draw_line(int32_t x0, int32_t y0, int32_t x1, int32_t y1, Style *style);
+  virtual void draw_text(const char *message, scalar_t x, scalar_t y, TextStyle *style);
+  virtual void draw_line(scalar_t x0, scalar_t y0, scalar_t x1, scalar_t y1, Style *style);
   virtual void clear(Color color);
   virtual void set_default_style(Style *style);
 

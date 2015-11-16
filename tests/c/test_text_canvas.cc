@@ -14,19 +14,19 @@ TEST(text_canvas, bounds) {
   TextCanvas canvas(80, 24);
   canvas.set_margin(1);
   TextStyle style;
-  style.set_typeface(TestHelpers::read_minecraft_typeface());
+  style.set_typeface(TestHelpers::read_monospace_typeface());
   canvas.set_style(&style);
   int32_size_t size = canvas.calc_canvas_size();
-  ASSERT_EQ(962, size.width());
-  ASSERT_EQ(242, size.height());
+  ASSERT_EQ(550, size.width());
+  ASSERT_EQ(290, size.height());
 }
 
 TEST(text_canvas, really_simple) {
   TextCanvas canvas(12, 8);
   TextStyle style;
-  style.set_typeface(TestHelpers::read_minecraft_typeface());
+  style.set_typeface(TestHelpers::read_monospace_typeface());
   style.set_color(Color::black());
-  style.set_text_size(16);
+  style.set_text_size(TestHelpers::kMonospaceTypefacePreferredSize);
   canvas.set_style(&style);
   canvas.set_margin(1);
   Bitmap bitmap;
