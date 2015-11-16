@@ -16,14 +16,60 @@ typedef uint64_t code_point_t;
 // An individual glyph on the canvas.
 class TextGlyph {
 public:
-  TextGlyph(code_point_t code_point) : code_point_(code_point) { }
-  TextGlyph(char chr) : code_point_(chr) { }
-  TextGlyph() : code_point_(0) { }
-  char to_char() { return code_point_ ? static_cast<char>(code_point_) : ' '; }
+  inline TextGlyph(char chr);
+  TextGlyph(utf8_t encoded);
+  TextGlyph(const TextGlyph&);
+  const TextGlyph &operator=(const TextGlyph &);
+  inline TextGlyph();
+  ~TextGlyph();
+
+  // Returns the utf8-encoding of this glyph.
+  inline const char *as_utf8() const;
+
+  // Does this glyph not have contents?
+  inline bool is_empty();
+
+  // Does this glyph hold its character data inline?
+  bool is_inline() { return is_inline_; }
 
 private:
-  code_point_t code_point_;
+  // Up to how many characters (including null terminator) will be store within
+  // the glyph itself?
+  static const size_t kInlineCharCount = 4;
+
+  // Is the character data stored inline within the glyph?
+  bool is_inline_;
+
+  // Sets the contents "properly", copying the string if it's too long to store
+  // inline.
+  void set_contents(utf8_t encoded);
+
+  union {
+    // Data stored inline.
+    char inline_[kInlineCharCount];
+    // Pointer to an external copy owned by this glyph.
+    char *ptr_;
+  } data_;
 };
+
+TextGlyph::TextGlyph(char chr)
+  : is_inline_(true) {
+  data_.inline_[0] = chr;
+  data_.inline_[1] = '\0';
+}
+
+TextGlyph::TextGlyph()
+  : is_inline_(true) {
+  data_.inline_[0] = '\0';
+}
+
+const char *TextGlyph::as_utf8() const {
+  return is_inline_ ? data_.inline_ : data_.ptr_;
+}
+
+bool TextGlyph::is_empty() {
+  return as_utf8()[0] == '\0';
+}
 
 // A text canvas is responsible for rendering a square block of text (that is,
 // the contents of the text terminal) on a graphics context.

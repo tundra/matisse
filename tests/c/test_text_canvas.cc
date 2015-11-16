@@ -5,6 +5,7 @@
 #include "helpers.hh"
 #include "test/unittest.hh"
 #include "io/file.hh"
+#include "utils/string-inl.h"
 
 using namespace matisse;
 using namespace tclib;
@@ -47,6 +48,25 @@ TEST(text_canvas, really_simple) {
   canvas.render(context);
   ASSERT_IMGEQ(&bitmap, "test_text_canvas_alphabet.png");
 
-
   delete context;
+}
+
+TEST(text_canvas, glyph) {
+  TextGlyph glyph;
+  ASSERT_TRUE(glyph.is_empty());
+  glyph = TextGlyph('4');
+  ASSERT_FALSE(glyph.is_empty());
+  ASSERT_TRUE(glyph.is_inline());
+  ASSERT_C_STREQ("4", glyph.as_utf8());
+  glyph = TextGlyph(new_c_string("4"));
+  ASSERT_FALSE(glyph.is_empty());
+  ASSERT_TRUE(glyph.is_inline());
+  ASSERT_C_STREQ("4", glyph.as_utf8());
+  glyph = TextGlyph(new_c_string("abcdefg"));
+  ASSERT_FALSE(glyph.is_empty());
+  ASSERT_FALSE(glyph.is_inline());
+  ASSERT_C_STREQ("abcdefg", glyph.as_utf8());
+  glyph = TextGlyph(new_c_string("asd"));
+  ASSERT_TRUE(glyph.is_inline());
+  ASSERT_C_STREQ("asd", glyph.as_utf8());
 }
