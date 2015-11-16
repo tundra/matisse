@@ -107,7 +107,7 @@ GlyphFontInfo TextCanvas::calc_glyph_font_info() {
   SkiaGraphicsContext::text_style_to_sk_paint(style_, &paint);
   SkPaint::FontMetrics metrics;
   struct_zero_fill(metrics);
-  SkScalar height_per_line = paint.getFontMetrics(&metrics);
+  SkScalar height_per_line = paint.getFontMetrics(&metrics, 1.0);
   SkScalar width_per_glyph = 0;
   paint.getTextWidths("X", 1, &width_per_glyph);
   GlyphFontInfo info = {

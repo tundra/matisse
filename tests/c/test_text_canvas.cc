@@ -17,7 +17,7 @@ TEST(text_canvas, bounds) {
   style.set_typeface(TestHelpers::read_monospace_typeface());
   canvas.set_style(&style);
   int32_size_t size = canvas.calc_canvas_size();
-  ASSERT_EQ(550, size.width());
+  ASSERT_EQ(482, size.width());
   ASSERT_EQ(290, size.height());
 }
 

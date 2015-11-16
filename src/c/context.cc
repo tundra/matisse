@@ -68,14 +68,20 @@ void SkiaGraphicsContext::text_style_to_sk_paint(TextStyle *style, SkPaint *out)
 
 Typeface Typeface::read(tclib::InStream *in) {
   std::vector<uint8_t> data;
-  if (!Utils::read_in_stream(in, &data))
+  if (!Utils::read_in_stream(in, &data)) {
+    WARN("Problem reading data for typeface from stream");
     return Typeface();
+  }
   // The stream will be oned by the typeface so we need to copy the data out
   // of the vector.
   SkMemoryStream *stream = new SkMemoryStream(data.data(), data.size(),
       /*copyData*/ true);
   // Ownership of the stream is transferred so no need to delete it.
   SkTypeface *sk_typeface = SkTypeface::CreateFromStream(stream);
+  if (sk_typeface == NULL) {
+    WARN("Problem creating typeface from data (%ib)", data.size());
+    return Typeface();
+  }
   return Typeface(sk_typeface);
 }
 

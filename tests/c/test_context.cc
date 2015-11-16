@@ -51,15 +51,23 @@ TEST(context, ttf_font) {
   Bitmap bitmap;
   ASSERT_TRUE(bitmap.init_empty(150, 100));
   GraphicsContext *context = bitmap.new_context();
-  context->clear(Color::white());
   TextStyle style;
   style.set_antialias(false);
   style.set_color(Color::black());
   style.set_typeface(monospace);
+
   style.set_text_size(TestHelpers::kMonospaceTypefacePreferredSize);
+  context->clear(Color::white());
   context->draw_text("Hello", 10, 40, &style);
   context->draw_text("Matisse", 10, 80, &style);
   ASSERT_IMGEQ(&bitmap, "test_context_ttf_font.png");
+
+  style.set_text_size(TestHelpers::kMonospaceTypefaceBigSize);
+  context->clear(Color::white());
+  context->draw_text("Hello", 10, 40, &style);
+  context->draw_text("Matisse", 10, 80, &style);
+  ASSERT_IMGEQ(&bitmap, "test_context_ttf_font_big.png");
+
   delete context;
 }
 

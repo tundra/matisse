@@ -47,7 +47,8 @@ public:
 
   // The monospace typeface is a bitmap font and this is the "natural" size for
   // the bitmaps.
-  static const int32_t kMonospaceTypefacePreferredSize = 14;
+  static const int32_t kMonospaceTypefacePreferredSize = 12;
+  static const int32_t kMonospaceTypefaceBigSize = 24;
 };
 
 } // namespace matisse
